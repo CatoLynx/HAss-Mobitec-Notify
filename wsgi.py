@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+import datetime
 import json
 import threading
 import time
@@ -86,19 +87,20 @@ class NotificationDisplay:
         ]
         for notification in self.notifications:
             timestamp, text = notification
+            absolute_time = datetime.datetime.fromtimestamp(timestamp).strftime("%H:%M")
             seconds = round(now - timestamp)
             if seconds >= 3600:
                 hours = seconds // 3600
                 if hours == 1:
-                    relative_str = f"{hours} hour ago"
+                    relative_str = f"{hours} hour ago ({absolute_time})"
                 else:
-                    relative_str = f"{hours} hours ago"
+                    relative_str = f"{hours} hours ago ({absolute_time})"
             elif seconds >= 60:
                 minutes = seconds // 60
                 if minutes == 1:
-                    relative_str = f"{minutes} minute ago"
+                    relative_str = f"{minutes} minute ago ({absolute_time})"
                 else:
-                    relative_str = f"{minutes} minutes ago"
+                    relative_str = f"{minutes} minutes ago ({absolute_time})"
             else:
                 # For fresh notifications, show them as a scrolling text for the first minute
                 # self.notifications is sorted by newest first, so returning after this is fine
