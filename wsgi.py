@@ -64,6 +64,28 @@ class NotificationDisplay:
         return f"{temp_state.state}C {rh_state.state}rH {float(co2_state.state):.0f}ppm {pm25_state.state}ug/m3 {voc_state.state}VOC"
 
     def update_display(self):
+        # Test communication
+        ping_success = True
+        try:
+            req_byte = 0x42
+            resp_byte = self.display.echo_byte(req_byte)[0]
+            if resp_byte != req_byte:
+                print(f"FATAL: Display ping fail! Sent 0x{req_byte:02X}, received 0x{resp_byte:02X}")
+                ping_success = False
+        except:
+            print("FATAL: Display did not respond to ping!")
+            ping_success = False
+
+        if not ping_success and HASS_POWER_SWITCH_ID is not None:
+            # Power cycle display
+            print("Turning off display power")
+            self.hass.trigger_service('switch', 'turn_off', entity_id=HASS_POWER_SWITCH_ID)
+            time.sleep(10)
+            print("Turning on display power")
+            self.hass.trigger_service('switch', 'turn_on', entity_id=HASS_POWER_SWITCH_ID)
+            time.sleep(3)
+            print("Done!")
+
         now = time.time()
         now_str = time.strftime("%d.%m.%Y %H:%M")
         if not self.display_on:
