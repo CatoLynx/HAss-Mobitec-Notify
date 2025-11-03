@@ -68,6 +68,7 @@ class NotificationDisplay:
         ping_success = True
         try:
             req_byte = 0x42
+            self.display.device.read(self.display.device.inWaiting()) # Flush buffer
             resp_byte = self.display.echo_byte(req_byte)[0]
             if resp_byte != req_byte:
                 print(f"FATAL: Display ping fail! Sent 0x{req_byte:02X}, received 0x{resp_byte:02X}")
