@@ -64,6 +64,10 @@ class NotificationDisplay:
         return f"{temp_state.state}C {rh_state.state}rH {float(co2_state.state):.0f}ppm {pm25_state.state}ug/m3 {voc_state.state}VOC"
 
     def update_display(self):
+        if not self.display_on:
+            self.display.send_static_text("")
+            return
+        
         # Test communication
         ping_success = True
         try:
@@ -89,9 +93,6 @@ class NotificationDisplay:
 
         now = time.time()
         now_str = time.strftime("%d.%m.%Y %H:%M")
-        if not self.display_on:
-            self.display.send_static_text("")
-            return
 
         texts = [
             {
