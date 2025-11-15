@@ -60,8 +60,8 @@ class NotificationDisplay:
         pm25_state = self.hass.get_state(entity_id="sensor.flur_luft_pm25")
         voc_state = self.hass.get_state(entity_id="sensor.flur_luft_voc_index")
         rh_state = self.hass.get_state(entity_id="sensor.flur_luft_humidity")
-        temp_state = self.hass.get_state(entity_id="sensor.flur_luft_temperature")
-        return f"{temp_state.state}C {rh_state.state}rH {float(co2_state.state):.0f}ppm {pm25_state.state}ug/m3 {voc_state.state}VOC"
+        temp_state = self.hass.get_state(entity_id="sensor.wz_umgebung_temperature")
+        return f"{float(temp_state.state):.1f}C {rh_state.state}rH {float(co2_state.state):.0f}ppm {pm25_state.state}ug {voc_state.state}VOC"
 
     def update_display(self):
         if not self.display_on:
