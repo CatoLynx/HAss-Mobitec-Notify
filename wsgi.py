@@ -19,6 +19,7 @@ import datetime
 import json
 import threading
 import time
+import traceback
 
 from flask import Flask, request, Response
 from homeassistant_api import Client
@@ -94,6 +95,12 @@ class NotificationDisplay:
         now = time.time()
         now_str = time.strftime("%d.%m.%Y %H:%M")
 
+        try:
+            default_screen_text = self.get_default_screen_text()
+        except:
+            traceback.print_exc()
+            default_screen_text = "Error getting values!"
+
         texts = [
             {
                 'text': now_str,
@@ -102,7 +109,7 @@ class NotificationDisplay:
                 'font': 67
             },
             {
-                'text': self.get_default_screen_text(),
+                'text': default_screen_text,
                 'x': 0,
                 'y': 15,
                 'font': 65,
